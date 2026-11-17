@@ -1,0 +1,3 @@
+case,status,branch,refractive_index,surface_distance_m,endpoint_chord_m,geometric_length_m,straight_limit_error_m,optical_path_length_m,expected_optical_path_length_m,angular_endpoint_residual_rad,cartesian_endpoint_error_m
+constant_n_1_10_to_1000_m,solved,radial_monotonic,1.0,50000.0,50013.63408145877,50013.63408350717,2.04840034712106e-06,50013.63408350717,50013.63408145877,3.192793252004833e-13,2.0344478601774796e-06
+constant_n_1.0003_1000_to_1000_m,solved,single_minimum,1.0003,50000.0,50007.71972467485,50007.71970763205,-1.7042795661836863e-05,50022.72202354434,50022.72204059225,-2.67693853195361e-12,1.7057452325608402e-05

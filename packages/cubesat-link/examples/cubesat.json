@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0",
+  "operation": "evaluate_link",
+  "earth": {
+    "model": "sphere",
+    "radius_m": 6371000
+  },
+  "station": {
+    "lat_deg": 0,
+    "lon_deg": 0,
+    "altitude_m": 0,
+    "min_elevation_deg": 10
+  },
+  "state": {
+    "position_m": [
+      6871000,
+      0,
+      0
+    ],
+    "frame": "ECEF",
+    "epoch_utc": "2026-11-14T00:00:00Z"
+  },
+  "frequency_hz": 2400000000.0,
+  "radio": {
+    "tx_power_dbm": 30,
+    "tx_gain_dbi": 2,
+    "rx_gain_dbi": 12,
+    "tx_pointing_loss_db": 0,
+    "rx_pointing_loss_db": 0,
+    "cable_loss_db": 2,
+    "receiver_threshold_dbm": -120,
+    "receiver_mode": "Synthetic fixed threshold example; no modulation/rate assertion",
+    "antenna_basis": "Synthetic ideal tracking and boresight gains"
+  },
+  "polarization": {
+    "tx": "circular",
+    "rx": "circular",
+    "circular_match": true
+  },
+  "neutral": {
+    "kind": "p834_reference"
+  },
+  "electrons": {
+    "kind": "path",
+    "metadata": {
+      "source": "Synthetic example: homogeneous finite electron column",
+      "version": "fixture-1",
+      "epoch_utc": "2026-11-14T00:00:00Z",
+      "temporal_kind": "synthetic",
+      "applicability": "Synthetic radial ground-to-500-km endpoint only; not IRI or space weather",
+      "units": {
+        "distance_m": "m",
+        "density_per_m3": "el/m3",
+        "b_parallel_t": "T"
+      }
+    },
+    "binding": {
+      "station": {
+        "lat_deg": 0,
+        "lon_deg": 0,
+        "altitude_m": 0,
+        "min_elevation_deg": 10
+      },
+      "state": {
+        "position_m": [
+          6871000,
+          0,
+          0
+        ],
+        "frame": "ECEF",
+        "epoch_utc": "2026-11-14T00:00:00Z"
+      },
+      "earth": {
+        "model": "sphere",
+        "radius_m": 6371000
+      },
+      "path_kind": "spherical_refracted",
+      "path_length_m": 500000
+    },
+    "data": {
+      "distance_m": [
+        0,
+        100000,
+        300000,
+        500000
+      ],
+      "density_per_m3": [
+        0,
+        0,
+        1000000000000.0,
+        500000000000.0
+      ],
+      "b_parallel_t": [
+        5e-05,
+        5e-05,
+        5e-05,
+        5e-05
+      ],
+      "source": "Synthetic example, four samples along radial ray"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+* text=auto
+.gitattributes text eol=lf
+.gitignore text eol=lf
+
+# Keep source, scientific tables, and documentation deterministic across platforms.
+*.py text eol=lf
+*.pyi text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.json text eol=lf
+*.csv text eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+
+# Preserve reproducibility artifacts byte-for-byte.
+*.png binary
+*.zip binary
+*.whl binary

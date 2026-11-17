@@ -1,0 +1,26 @@
+{
+  "tests": {
+    "count": 38,
+    "failures": 0,
+    "errors": 0,
+    "isolated": true
+  },
+  "uav": "API/CLI equal; request/response validated",
+  "cubesat": "API/CLI equal; request/response validated",
+  "cubesat_ideal": "API/CLI equal; request/response validated",
+  "pass": "API/CLI equal; request/response validated",
+  "python_examples": [
+    "uav.py",
+    "cubesat.py",
+    "pass_demo.py",
+    "overhead.py",
+    "validation.py"
+  ],
+  "console_entry_point": "passed, including stdin",
+  "release": "0.2.0",
+  "python": "3.15.2 (main, Oct 26 2026, 14:23:21) [MSC v.1951 64 bit (AMD64)]",
+  "installed_origin": "C:\\Users\\admin\\Downloads\\hackathon\\raytrace\\.release-check\\Lib\\site-packages\\cubesat_link\\__init__.py",
+  "runtime_dependencies": [],
+  "wheel_sha256": "4d1c4e57caf795e5981783105f756b768d7fb8b13ca14a45d348da47638062fb",
+  "wheel_source_bytes_match": true
+}

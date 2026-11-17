@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "release": "0.2.0",
+  "ok": true,
+  "operation": "contact_windows",
+  "result": {
+    "windows": [
+      {
+        "start_utc": "2026-11-14T00:06:03.122786Z",
+        "end_utc": "2026-11-14T00:13:56.877214Z",
+        "start_clipped": false,
+        "end_clipped": false,
+        "method": "geometric mask; piecewise-linear ECEF; no extrapolation"
+      }
+    ],
+    "mode": "geometric",
+    "earth": {
+      "model": "sphere",
+      "radius_m": 6371000
+    }
+  }
+}

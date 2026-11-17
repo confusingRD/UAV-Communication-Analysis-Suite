@@ -1,0 +1,202 @@
+{
+  "generated_utc": "2026-11-17T08:17:11.154276+00:00",
+  "scenario": {
+    "name": "UAV dry standard-atmosphere Phase 1 demonstration",
+    "geometric_altitude_range_m": [
+      0.0,
+      5000.0
+    ],
+    "profile_spacing_m": 10.0,
+    "selected_uav_altitudes_m": [
+      0.0,
+      100.0,
+      250.0,
+      500.0,
+      1000.0,
+      2000.0,
+      3000.0,
+      5000.0
+    ],
+    "earth_radius_for_radio_geometry_m": 6371000.0
+  },
+  "models": {
+    "thermodynamics": "U.S. Standard Atmosphere 1976 compatible lower atmosphere",
+    "refractivity": "ITU-R P.453-14 dry-air formula",
+    "humidity": "e=0 dry reference; not a humidity measurement",
+    "altitude_conversion": "geometric to geopotential using 6,356,766 m",
+    "profile_interpolation": "piecewise-linear",
+    "profile_boundary_policy": "unavailable"
+  },
+  "profile_sha256": "d61ad4966e704dd9c11e5d382351d5711e985eac171e406cd2a36c9eadd4d3d5",
+  "selected_conditions": [
+    {
+      "geometric_altitude_m": 0.0,
+      "geopotential_altitude_m": 0.0,
+      "temperature_k": 288.15,
+      "temperature_c": 15.0,
+      "pressure_pa": 101325.0,
+      "density_kg_m3": 1.225000018124288,
+      "dynamic_viscosity_pa_s": 1.789380278077583e-05,
+      "speed_of_sound_m_s": 340.293988026089,
+      "radio_refractivity_n_units": 272.87246225923997,
+      "refractive_index": 1.0002728724622592
+    },
+    {
+      "geometric_altitude_m": 100.0,
+      "geopotential_altitude_m": 99.99842689778265,
+      "temperature_k": 287.5000102251644,
+      "temperature_c": 14.350010225164397,
+      "pressure_pa": 100129.45645595284,
+      "density_kg_m3": 1.2132829673322953,
+      "dynamic_viscosity_pa_s": 1.7862423028948615e-05,
+      "speed_of_sound_m_s": 339.90996496753064,
+      "radio_refractivity_n_units": 270.2624537264048,
+      "refractive_index": 1.0002702624537263
+    },
+    {
+      "geometric_altitude_m": 250.0,
+      "geopotential_altitude_m": 249.99016834313457,
+      "temperature_k": 286.5250639057696,
+      "temperature_c": 13.37506390576965,
+      "pressure_pa": 98357.6493166961,
+      "density_kg_m3": 1.195869058923985,
+      "dynamic_viscosity_pa_s": 1.7815291289978464e-05,
+      "speed_of_sound_m_s": 339.3331382130522,
+      "radio_refractivity_n_units": 266.38345291446325,
+      "refractive_index": 1.0002663834529144
+    },
+    {
+      "geometric_altitude_m": 500.0,
+      "geopotential_altitude_m": 499.9606749190611,
+      "temperature_k": 284.9002556130261,
+      "temperature_c": 11.750255613026127,
+      "pressure_pa": 95461.28549146843,
+      "density_kg_m3": 1.1672732849512553,
+      "dynamic_viscosity_pa_s": 1.773657203776756e-05,
+      "speed_of_sound_m_s": 338.3696358310448,
+      "radio_refractivity_n_units": 260.0136576991984,
+      "refractive_index": 1.0002600136576991
+    },
+    {
+      "geometric_altitude_m": 1000.0,
+      "geopotential_altitude_m": 999.8427120469674,
+      "temperature_k": 281.6510223716947,
+      "temperature_c": 8.501022371694717,
+      "pressure_pa": 89876.27760234236,
+      "density_kg_m3": 1.111659673699691,
+      "dynamic_viscosity_pa_s": 1.7578504775661537e-05,
+      "speed_of_sound_m_s": 336.43458210225776,
+      "radio_refractivity_n_units": 247.62555744383758,
+      "refractive_index": 1.0002476255574437
+    },
+    {
+      "geometric_altitude_m": 2000.0,
+      "geopotential_altitude_m": 1999.370947130308,
+      "temperature_k": 275.15408884365297,
+      "temperature_c": 2.004088843652994,
+      "pressure_pa": 79501.41106848906,
+      "density_kg_m3": 1.0065537536106361,
+      "dynamic_viscosity_pa_s": 1.7259816220014498e-05,
+      "speed_of_sound_m_s": 332.53162143280116,
+      "radio_refractivity_n_units": 224.21289557576785,
+      "refractive_index": 1.0002242128955758
+    },
+    {
+      "geometric_altitude_m": 3000.0,
+      "geopotential_altitude_m": 2998.58485359367,
+      "temperature_k": 268.65919845164115,
+      "temperature_c": -4.4908015483588315,
+      "pressure_pa": 70121.14406807565,
+      "density_kg_m3": 0.909254345251703,
+      "dynamic_viscosity_pa_s": 1.693764616800102e-05,
+      "speed_of_sound_m_s": 328.58355338394585,
+      "radio_refractivity_n_units": 202.5391578268304,
+      "refractive_index": 1.0002025391578269
+    },
+    {
+      "geometric_altitude_m": 5000.0,
+      "geopotential_altitude_m": 4996.070273568692,
+      "temperature_k": 255.67554322180348,
+      "temperature_c": -17.474456778196497,
+      "pressure_pa": 54048.26223756018,
+      "density_kg_m3": 0.7364286133691456,
+      "dynamic_viscosity_pa_s": 1.628248135362207e-05,
+      "speed_of_sound_m_s": 320.545406859744,
+      "radio_refractivity_n_units": 164.04170288576125,
+      "refractive_index": 1.0001640417028859
+    }
+  ],
+  "analytical_horizon_reference": {
+    "labels": "geometric/EER analytical references, not ray-tracing predictions",
+    "ground_antenna_height_m": 10.0,
+    "k_values": [
+      1.0,
+      1.3333333333333333,
+      1.1916169531249652
+    ],
+    "derived_k_gradient_dn_dh_per_m": -2.5246904815423577e-08,
+    "derived_k_gradient_n_units_per_km": -25.246904815423576,
+    "derived_k_relative_gradient_variation": 0.033793469709051664,
+    "derived_k_height_domain_m": [
+      0.0,
+      1000.0
+    ],
+    "derived_k_applicability": "Near-horizontal analytical reference within the declared height interval; requires an approximately constant gradient and is not ray tracing"
+  },
+  "reference_link_budgets": {
+    "uplink": {
+      "direction": "uplink",
+      "transmitter_id": "ground",
+      "receiver_id": "uav",
+      "distance_m": 1000.0,
+      "frequency_hz": 2400000000.0,
+      "free_space_path_loss_db": 100.0520080561155,
+      "received_power_dbm": -62.0520080561155,
+      "raw_margin_db": 27.947991943884503,
+      "design_margin_db": 17.947991943884503,
+      "meets_required_margin": true,
+      "assumptions": [
+        "ITU-R P.525 free-space spreading evaluated at the supplied distance",
+        "independent TX/RX gains and feeder losses selected by link direction",
+        "no unverified atmospheric absorption term",
+        "conditional reference budget; not ray-based communication coverage"
+      ]
+    },
+    "downlink": {
+      "direction": "downlink",
+      "transmitter_id": "uav",
+      "receiver_id": "ground",
+      "distance_m": 1000.0,
+      "frequency_hz": 2400000000.0,
+      "free_space_path_loss_db": 100.0520080561155,
+      "received_power_dbm": -72.0520080561155,
+      "raw_margin_db": 27.947991943884503,
+      "design_margin_db": 17.947991943884503,
+      "meets_required_margin": true,
+      "assumptions": [
+        "ITU-R P.525 free-space spreading evaluated at the supplied distance",
+        "independent TX/RX gains and feeder losses selected by link direction",
+        "no unverified atmospheric absorption term",
+        "conditional reference budget; not ray-based communication coverage"
+      ]
+    }
+  },
+  "limitations": [
+    "Numerical verification is not experimental validation.",
+    "The dry ISA profile is not measured weather and contains no vertical humidity profile.",
+    "No atmospheric absorption model is included.",
+    "Horizon curves are analytical geometric/EER references, not ray-tracing predictions.",
+    "The FSPL budgets are illustrative conditional arithmetic, not coverage results.",
+    "No Phase 2 ray-tracing BVP, terrain, diffraction, multipath, or field validation is present."
+  ],
+  "files": [
+    "uav_atmosphere_profile.csv",
+    "selected_uav_altitudes.csv",
+    "temperature_vs_altitude.png",
+    "pressure_vs_altitude.png",
+    "density_vs_altitude.png",
+    "refractivity_N_vs_altitude.png",
+    "refractive_index_vs_altitude.png",
+    "analytical_horizon_references.png"
+  ]
+}

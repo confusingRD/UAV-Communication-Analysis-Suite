@@ -1,0 +1,169 @@
+{
+  "schema_version": "1.0",
+  "release": "0.2.0",
+  "ok": true,
+  "operation": "evaluate_link",
+  "result": {
+    "geometry": {
+      "slant_range_m": 500000.0,
+      "azimuth_deg": null,
+      "elevation_deg": 90.0,
+      "earth_occulted": false,
+      "above_mask": true,
+      "geometric_visible": true,
+      "earth_model": "a=6371000 m; flattening=0"
+    },
+    "neutral_ray": null,
+    "refracted_visible": true,
+    "path_available": true,
+    "path_basis": "Explicit ideal vacuum; geometric path and geometric horizon",
+    "losses_db": {
+      "beam_spreading": {
+        "value": 0,
+        "unit": "dB",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "cloud": {
+        "value": 0,
+        "unit": "dB",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "free_space": {
+        "value": 154.03140814283586,
+        "unit": "dB",
+        "status": "computed",
+        "reason": "P.525-5 Eq (5), geometric endpoint range; beam spreading separate"
+      },
+      "gas": {
+        "value": 0,
+        "unit": "dB",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "ionospheric_absorption": {
+        "value": 0,
+        "unit": "dB",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "ionospheric_scintillation": {
+        "value": 0,
+        "unit": "dB",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "neutral_scintillation": {
+        "value": 0,
+        "unit": "dB",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "polarization": {
+        "value": 0,
+        "unit": "dB",
+        "status": "computed",
+        "reason": "Matched ideal circular states; pure Faraday rotation causes no mismatch"
+      },
+      "rain": {
+        "value": 0,
+        "unit": "dB",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      }
+    },
+    "ionosphere": {
+      "slant_tec": {
+        "value": 0,
+        "unit": "el/m2",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "group_delay": {
+        "value": 0,
+        "unit": "s",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "phase_path": {
+        "value": 0,
+        "unit": "m",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "phase_advance": {
+        "value": 0,
+        "unit": "rad",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "faraday_rotation": {
+        "value": 0,
+        "unit": "rad",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "scintillation": {
+        "value": 0,
+        "unit": "dB",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "absorption": {
+        "value": 0,
+        "unit": "dB",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      },
+      "ray_deflection": {
+        "value": 0,
+        "unit": "rad",
+        "status": "assumed",
+        "reason": "Explicit ideal vacuum scenario"
+      }
+    },
+    "neutral_excess_delay_s": {
+      "value": 0,
+      "unit": "s",
+      "status": "assumed",
+      "reason": "Explicit ideal vacuum scenario"
+    },
+    "budget": {
+      "received_power_dbm": {
+        "value": -112.03140814283586,
+        "unit": "dBm",
+        "status": "computed",
+        "reason": "Sum of named components, conditional on supplied assumptions"
+      },
+      "margin_db": {
+        "value": 7.968591857164142,
+        "unit": "dB",
+        "status": "computed",
+        "reason": "P_rx minus threshold for Synthetic fixed threshold example; no modulation/rate assertion"
+      },
+      "meets_required_margin": true,
+      "hardware_db": {
+        "tx_power_dbm": 30,
+        "tx_gain_dbi": 2,
+        "rx_gain_dbi": 12,
+        "tx_pointing_loss_db": 0,
+        "rx_pointing_loss_db": 0,
+        "cable_loss_db": 2,
+        "receiver_threshold_dbm": -120,
+        "required_margin_db": 0.0
+      },
+      "throughput_bps": {
+        "value": null,
+        "unit": "bit/s",
+        "status": "not_computable",
+        "reason": "No validated modulation/coding/BER and noise/bandwidth/rate model; sensitivity is not throughput"
+      },
+      "radio_assumptions": {
+        "receiver_mode": "Synthetic fixed threshold example; no modulation/rate assertion",
+        "antenna_basis": "Synthetic ideal tracking and boresight gains"
+      }
+    },
+    "providers": {}
+  }
+}
