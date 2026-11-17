@@ -1,0 +1,121 @@
+{
+  "milestone": "Phase 2B - Scientific Verification and Benchmarking",
+  "determinism": "No random inputs; fixed configurations, grids, tolerances, and plotting settings",
+  "baseline_profile": {
+    "source": "Dry ISA-1976 thermodynamic states with ITU-R P.453-14 refractivity",
+    "model_version": "UAV-CAS dry-ISA/P.453 profile v1",
+    "profile_hash": "ec4dc316f0bdcdf1fcc30e5cead8185e40ff4c1b69c3fd6ff76a46e50351158c",
+    "height_bounds_m": [
+      0.0,
+      5000.0
+    ],
+    "spacing_m": 25.0
+  },
+  "regenerated_130km_case": {
+    "case_id": "dry_near_horizon_130km",
+    "source_height_msl_m": 10.0,
+    "receiver_height_msl_m": 1000.0,
+    "surface_distance_m": 130000.0,
+    "profile_model": "UAV-CAS dry-ISA/P.453 profile v1",
+    "profile_hash": "ec4dc316f0bdcdf1fcc30e5cead8185e40ff4c1b69c3fd6ff76a46e50351158c",
+    "angular_tolerance_rad": 1.5696123057604771e-09,
+    "endpoint_tolerance_m": 0.01,
+    "quadrature_angle_tolerance_rad": 2e-12,
+    "quadrature_length_tolerance_m": 2e-05,
+    "quadrature_refractivity_tolerance_m": 2e-08,
+    "maximum_iterations": 100,
+    "maximum_quadrature_depth": 20,
+    "path_sample_count": 401,
+    "status": "solved",
+    "reason_code": "converged",
+    "branch": "single_minimum",
+    "source_elevation_deg": -0.05185533097032227,
+    "arrival_elevation_deg": 0.9267208246921406,
+    "endpoint_error_m": 0.0024087669225486548,
+    "angular_residual_rad": -3.7802368527128927e-10,
+    "minimum_clearance_m": 6.868748664855957,
+    "clearance_uncertainty_m": 0.05,
+    "invariant_relative_error": 3.739840911412124e-09,
+    "geometric_length_m": 130011.87580943535,
+    "optical_path_length_m": 130046.2860910982,
+    "refractivity_excess_m": 34.410281662836965,
+    "excess_delay_ns": 114.97325459941597,
+    "root_iterations": 21,
+    "quadrature_evaluations": 7913
+  },
+  "analytical_and_reciprocity": {
+    "constant_index": {
+      "index": 1.0003,
+      "central_angle_rad": 0.007848061528802385,
+      "surface_arc_m": 50000.0,
+      "endpoint_chord_m": 50013.63408143073,
+      "analytical_source_elevation_deg": 0.9093821161124604,
+      "numerical_source_elevation_deg": 0.9093821161086312,
+      "geometric_length_error_m": 1.788430381566286e-07,
+      "optical_path_error_m": 1.788939698599279e-07,
+      "analytical_travel_time_s": 0.00016687757425723886,
+      "numerical_travel_time_s": 0.00016687757425783557
+    },
+    "reversibility": {
+      "forward_status": "solved",
+      "reverse_status": "solved",
+      "geometric_length_difference_m": 0.0,
+      "optical_path_difference_m": 0.0,
+      "clearance_difference_m": 0.0,
+      "forward_launch_deg": 0.9460453223723632,
+      "reverse_arrival_look_deg": 0.9460453223723471
+    }
+  },
+  "eer_metadata": {
+    "derived_k": {
+      "k_factor": 1.1914256541974548,
+      "gradient_dn_dh_per_m": -2.5225425201114145e-08,
+      "reference_refractive_index": 1.0002600136576991,
+      "minimum_height_m": 0.0,
+      "maximum_height_m": 1000.0,
+      "maximum_relative_gradient_variation": 0.03754005310300718,
+      "applicability": "Near-horizontal analytical reference within the declared height interval; requires an approximately constant gradient and is not ray tracing"
+    },
+    "sampled_gradient_N_per_km": [
+      -26.172389002709906,
+      -25.692745664329664,
+      -25.219286801103635,
+      -24.751966325453623,
+      -24.290738211973917
+    ],
+    "interpretation": "The derived k is a local near-horizontal approximation over 0-1000 m; it is not fitted to ray results and is not used inside the ray tracer."
+  },
+  "numerical_findings": {
+    "profile_200m_to_12p5m_clearance_change_m": -0.02765882946550846,
+    "profile_25m_to_12p5m_clearance_change_m": -0.0006473874673247337,
+    "gradient_sensitivity_clearance_range_m": [
+      4.3389892578125,
+      8.708794116973877
+    ],
+    "independent_reference_max_abs_length_delta_m": 0.0002290419943165034,
+    "independent_reference_max_abs_refractivity_delta_m": 1.1171042480384585e-05
+  },
+  "interpretation_limits": [
+    "Numerical convergence verifies the stated scalar spherical equations; it is not field validation.",
+    "The dry ISA/P.453 profile and synthetic gradient scaling do not quantify real weather uncertainty.",
+    "A clear geometrical ray does not establish communications-link availability or margin.",
+    "EER is an independent approximation benchmark and is never a solver fallback."
+  ],
+  "files": [
+    "phase2b_profile_convergence.csv",
+    "phase2b_integration_convergence.csv",
+    "phase2b_shooting_convergence.csv",
+    "phase2b_path_sampling_convergence.csv",
+    "phase2b_benchmark_matrix.csv",
+    "phase2b_near_horizon_sensitivity.csv",
+    "phase2b_eer_comparison.csv",
+    "phase2b_independent_reference.csv",
+    "phase2b_ray_reference_comparison.png",
+    "phase2b_profile_convergence.png",
+    "phase2b_numerical_convergence.png",
+    "phase2b_horizon_transition.png",
+    "phase2b_eer_benchmark.png",
+    "phase2b_refractivity_sensitivity.png",
+    "phase2b_summary.json"
+  ]
+}

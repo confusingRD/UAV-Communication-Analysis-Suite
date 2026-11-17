@@ -43,3 +43,15 @@ Evidence: `docs/PROGRESS_PHASE1.md`, `docs/SOURCE_PROVENANCE.md`, `outputs/phase
 - **Affected files:** `.gitattributes`, `.gitignore`, `docs/CHANGELOG.md`, `docs/DECISIONS.md`, and `docs/DEVLOG.md`; repository metadata under `.git/` is local metadata rather than tracked content.
 - **Backward compatibility:** Repository-configuration and documentation change only. No scientific algorithm, physical assumption, API, dependency, unit, numerical tolerance, boundary condition, or supported domain changed.
 
+## 2026-11-17 — Phase 2B: scientific verification and benchmarking
+
+- **Added:** An independent Cartesian Fermat RK4 launch-shooting reference under `src/uav_cas/verification/`; it does not call the production spherical BVP quadratures or root solver.
+- **Added:** The deterministic `python -m uav_cas.phase2b_demo` workflow and console entry point, producing JSON, eight CSV tables, and six 300 dpi scientific figures.
+- **Added:** Systematic atmospheric-grid, quadrature-tolerance, shooting-limit, path-sampling, near-horizon, reversibility, analytical constant-index, EER, and benchmark-matrix studies.
+- **Added:** Phase 2B regression tests for the independent formulation, failure taxonomy (including quadrature exhaustion, physical blockage, ground-level endpoints, and coincident endpoints), and complete output regeneration.
+- **Added:** The academic verification report `docs/PROGRESS_PHASE2B.md` and reproducibility artifacts under `outputs/phase2b/`.
+- **Verified:** The 130 km Phase 2A case was independently regenerated under its original adapter controls; the complete suite now passes 77 tests plus 15 subtests.
+- **Preserved:** Production spherical BVP equations, solver settings/API, legacy CubeSat functionality, and the separation between ray tracing and EER. No EER fallback or Phase 3 coverage logic was added.
+- **Affected files:** `src/uav_cas/phase2b_demo.py`, `src/uav_cas/verification/`, `tests/test_phase2b_verification.py`, `pyproject.toml`, `docs/PROGRESS_PHASE2B.md`, `docs/CHANGELOG.md`, `docs/DECISIONS.md`, `docs/DEVLOG.md`, and `outputs/phase2b/`.
+- **Backward compatibility:** Additive implementation. Existing public APIs and numerical defaults are unchanged; all original CubeSat, Phase 1, and Phase 2A regression layers remain passing.
+

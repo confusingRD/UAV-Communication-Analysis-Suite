@@ -52,3 +52,23 @@ These records follow the repository-root `AGENTS.md` requirements. Records marke
 - **Trade-offs and known limitations:** Binary archives, wheels, and plots are not meaningfully diffable and increase repository size, although the current files are small. Tracking them does not resolve the existing redistribution-rights ambiguity; no license terms are inferred.
 - **Consequences for future development:** Large or replaceable generated artifacts should be reviewed before tracking and may require an external artifact store or Git LFS. Provenance-critical scientific data must not be removed solely for size reduction, and licensing/ownership must be resolved before a formal public release claim.
 
+## ADR-006 — Verify the spherical BVP with an additive Cartesian Fermat reference
+
+- **Date:** 2026-11-17
+- **Status:** Accepted
+- **Context:** Phase 2B required a reference that did not merely repeat the production Bouguer-invariant integration and root solve. The existing Phase 2A test integrated one production launch direction but did not provide a reusable independent BVP shoot or reproducible benchmark output.
+- **Decision and technical justification:** Add a two-dimensional Cartesian fixed-step RK4 integrator for `d(nu)/ds=grad(n)` with its own launch-elevation scan and bisection. Keep it in a verification-only module, pass it the same immutable bounded profile, and prohibit its use as a runtime fallback. This changes the numerical formulation while retaining common physical inputs for a controlled comparison.
+- **Alternatives considered:** Reuse the production launch angle only; implement another Bouguer quadrature; replace a failed production result with the Cartesian reference. The first provides weaker BVP independence, the second shares the production formulation, and the third would hide solver status and violate the approved method separation.
+- **Trade-offs and known limitations:** The reference shares the profile interpolation, spherical symmetry, and scalar-index assumptions. Fixed-step integration and receiver-angle event interpolation are less efficient and limit the last digits; it is suitable for deterministic verification cases, not production coverage search.
+- **Consequences for future development:** Phase 3 continues to use the production spherical BVP. The Cartesian method remains a regression oracle for representative supported cases and must report unresolved outcomes rather than supplying fallback paths.
+
+## ADR-007 — Separate numerical convergence from near-horizon physical uncertainty
+
+- **Date:** 2026-11-17
+- **Status:** Accepted
+- **Context:** The 130 km demonstration clears the ideal surface by only about 6.87 m. Solver tolerances can be made much smaller than this value, but real refractivity, endpoint heights, datum, and terrain are not known to comparable precision.
+- **Decision and technical justification:** Retain the established 0.05 m numerical grazing band; characterize profile, quadrature, shooting, and path-sampling effects separately; and label dry-profile gradient scaling as controlled sensitivity rather than a probabilistic weather uncertainty. Recommend only a conditional Phase 3 start within the verified direct-ray family.
+- **Alternatives considered:** Treat solver precision as prediction accuracy; assign an invented atmospheric probability distribution; tune the ray to conventional `k=4/3`; or declare every positive modeled clearance operationally visible. These would conflate numerical, model, and input uncertainty or improperly calibrate the primary solver.
+- **Trade-offs and known limitations:** The studies establish deterministic sensitivity but no confidence interval or empirical accuracy. A smooth-sphere classification may differ from terrain-aware or measured-atmosphere behavior even when numerical residuals are small.
+- **Consequences for future development:** Coverage results must preserve clear/grazing/blocked/unresolved distinctions, expose input/model assumptions, and avoid link-availability claims. Terrain-aware or operational conclusions require later models and measured validation.
+

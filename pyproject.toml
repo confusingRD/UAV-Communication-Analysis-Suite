@@ -17,6 +17,7 @@ packaging-smoke = ["PySide6>=6.8,<7", "PyInstaller>=6.11,<7"]
 [project.scripts]
 uav-cas-atmosphere-demo = "uav_cas.demo:main"
 uav-cas-phase2a-demo = "uav_cas.phase2a_demo:main"
+uav-cas-phase2b-demo = "uav_cas.phase2b_demo:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
