@@ -8,10 +8,15 @@ from math import cos, sin
 
 import pytest
 
-from cubesat_link import NeutralProfile, RaySolverSettings, RaySolveStatus, trace_spherical_between
 from uav_cas.atmosphere.profiles import RefractivityProfile
 from uav_cas.phase2b_demo import run_demo
-from uav_cas.propagation import PropagationRequest, trace_uav_path
+from uav_cas.propagation import (
+    PropagationRequest,
+    RaySolverSettings,
+    RaySolveStatus,
+    trace_spherical_between,
+    trace_uav_path,
+)
 from uav_cas.verification import trace_cartesian_fermat
 
 
@@ -85,9 +90,12 @@ def test_failure_taxonomy_keeps_physical_and_numerical_failures_distinct() -> No
         (RADIUS_M + 10.0, 0.0, 0.0),
         (RADIUS_M + 10.0, 0.0, 0.0),
         2.4e9,
-        NeutralProfile(
-            (0.0, 5_000.0), (1.0, 1.0), "constant", (1e8, 12e9),
-            outside="unavailable",
+        RefractivityProfile.from_samples(
+            (0.0, 5_000.0),
+            (1.0, 1.0),
+            source="constant",
+            model_version="test constant-index profile",
+            humidity_basis="specified constant refractive index",
         ),
         RADIUS_M,
         RADIUS_M,

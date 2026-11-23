@@ -1,17 +1,36 @@
-"""Phase 1 conditional free-space reference link budget.
+"""Conditional ITU-R P.525 free-space reference link budget.
 
-This module reuses the preserved cubesat_link P.525 implementation.  It does
-not infer atmospheric absorption and does not establish ray-based coverage.
+The calculation does not infer atmospheric absorption and does not establish
+ray-based coverage by itself.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-
-from cubesat_link.budget import fspl_db as verified_fspl_db
+from math import log10, pi
 
 from .models import LinkConfiguration
 from .validation import nonnegative, positive
+
+
+SPEED_OF_LIGHT_M_S = 299_792_458.0
+
+
+def free_space_path_loss_db(distance_m: float, frequency_hz: float) -> float:
+    """Return ITU-R P.525-5 Eq. (5) free-space loss in dB.
+
+    ``distance_m`` is the supplied spreading distance in metres and
+    ``frequency_hz`` is in hertz. Antenna gains, feeder losses, atmospheric
+    losses, and polarization losses are intentionally excluded.
+    """
+
+    distance = positive(distance_m, "distance_m")
+    frequency = positive(frequency_hz, "frequency_hz")
+    return 20.0 * (
+        log10(4.0 * pi / SPEED_OF_LIGHT_M_S)
+        + log10(distance)
+        + log10(frequency)
+    )
 
 
 @dataclass(frozen=True)
@@ -41,7 +60,7 @@ def calculate_reference_link_budget(
     other_loss = nonnegative(other_verified_loss_db, "other_verified_loss_db")
     transmitter = configuration.transmitter
     receiver = configuration.receiver
-    fspl = verified_fspl_db(distance, configuration.frequency_hz)
+    fspl = free_space_path_loss_db(distance, configuration.frequency_hz)
     received = (
         transmitter.tx_power_dbm
         - transmitter.tx_feeder_loss_db

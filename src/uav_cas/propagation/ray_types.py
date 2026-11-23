@@ -1,8 +1,7 @@
-"""Immutable contracts for the additive spherical endpoint ray solver.
+"""Immutable contracts for the UAV-CAS spherical endpoint ray solver.
 
-The legacy :mod:`cubesat_link.neutral` contracts remain unchanged.  These
-types deliberately distinguish a solved physical ray from blockage,
-unsupported physics, missing profile data, and numerical failure.
+The contracts distinguish a solved physical ray from blockage, unsupported
+physics, missing profile data, invalid input, and numerical failure.
 """
 
 from __future__ import annotations

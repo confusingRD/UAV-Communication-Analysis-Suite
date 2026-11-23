@@ -7,16 +7,14 @@ from math import acos, ceil, cos, sin, sqrt
 
 import pytest
 
-from cubesat_link import (
-    NeutralProfile,
+from uav_cas.atmosphere.profiles import RefractivityProfile
+from uav_cas.propagation import (
     RayBranch,
     RaySolverSettings,
     RaySolveStatus,
     trace_spherical_between,
 )
-from uav_cas.atmosphere.profiles import RefractivityProfile
 from uav_cas.propagation import PropagationRequest, trace_uav_path
-from uav_cas.propagation.ray_tracing import to_neutral_profile
 
 
 R = 6_371_000.0
@@ -29,13 +27,16 @@ def _endpoint(height_m: float, surface_distance_m: float) -> tuple[float, float,
     return (radius * cos(angle), radius * sin(angle), 0.0)
 
 
-def _constant_profile(index: float = 1.0, minimum_m: float = 0.0) -> NeutralProfile:
-    return NeutralProfile(
+def _constant_profile(
+    index: float = 1.0,
+    minimum_m: float = 0.0,
+) -> RefractivityProfile:
+    return RefractivityProfile.from_samples(
         (minimum_m, 5_000.0),
         (index, index),
-        f"constant n={index}",
-        (1.0e8, 12.0e9),
-        outside="unavailable",
+        source=f"constant n={index}",
+        model_version="test constant-index profile",
+        humidity_basis="specified constant refractive index",
     )
 
 
@@ -43,7 +44,7 @@ def _trace(
     source_height_m: float,
     receiver_height_m: float,
     surface_distance_m: float,
-    profile: NeutralProfile | None = None,
+    profile: RefractivityProfile | None = None,
     settings: RaySolverSettings = RaySolverSettings(),
 ):
     return trace_spherical_between(
@@ -58,7 +59,7 @@ def _trace(
 
 
 def _independent_fermat_endpoint(
-    profile: NeutralProfile,
+    profile: RefractivityProfile,
     source: tuple[float, float, float],
     tangent: tuple[float, float, float],
     path_length_m: float,
@@ -66,8 +67,8 @@ def _independent_fermat_endpoint(
 ) -> tuple[float, float, float, float, float]:
     """Independent Cartesian RK4, not the production invariant integrals."""
 
-    heights = profile.height_m
-    indices = profile.refractive_index
+    heights = profile.geometric_heights_m
+    indices = profile.refractive_indices
 
     def rhs(values: tuple[float, float, float, float, float]):
         x, y, ux, uy, optical_excess = values
@@ -141,7 +142,7 @@ def test_equal_height_single_minimum_matches_spherical_straight_geometry() -> No
 
 
 def test_reversed_configuration_is_reciprocal_for_static_scalar_index() -> None:
-    profile = to_neutral_profile(RefractivityProfile.from_dry_isa(0.0, 5_000.0, 25.0))
+    profile = RefractivityProfile.from_dry_isa(0.0, 5_000.0, 25.0)
     forward = _trace(10.0, 1_000.0, 50_000.0, profile)
     reverse = trace_spherical_between(
         _endpoint(1_000.0, 50_000.0),
@@ -164,7 +165,7 @@ def test_reversed_configuration_is_reciprocal_for_static_scalar_index() -> None:
 
 
 def test_dry_profile_matches_independent_cartesian_fermat_integration() -> None:
-    profile = to_neutral_profile(RefractivityProfile.from_dry_isa(0.0, 5_000.0, 25.0))
+    profile = RefractivityProfile.from_dry_isa(0.0, 5_000.0, 25.0)
     result = _trace(10.0, 1_000.0, 50_000.0, profile)
     assert result.status is RaySolveStatus.SOLVED
     coarse = _independent_fermat_endpoint(
@@ -206,7 +207,7 @@ def test_profile_and_path_sampling_refinement_converge_separately() -> None:
     ]
     assert differences[2] < differences[1] < differences[0]
 
-    profile = to_neutral_profile(RefractivityProfile.from_dry_isa(0.0, 5_000.0, 25.0))
+    profile = RefractivityProfile.from_dry_isa(0.0, 5_000.0, 25.0)
     sampling_errors = []
     for count in (21, 51, 101, 201):
         result = _trace(
@@ -283,12 +284,12 @@ def test_ground_grazing_and_ground_intersection_are_not_forced_solutions() -> No
 
 
 def test_unsupported_branch_and_solver_exhaustion_have_distinct_statuses() -> None:
-    nonmonotonic = NeutralProfile(
+    nonmonotonic = RefractivityProfile.from_samples(
         (0.0, 1_000.0, 5_000.0),
         (1.001, 1.0, 1.0),
-        "synthetic nonmonotonic q",
-        (1.0e8, 12.0e9),
-        outside="unavailable",
+        source="synthetic nonmonotonic q",
+        model_version="test nonmonotonic profile",
+        humidity_basis="specified synthetic refractive index",
     )
     unsupported = _trace(10.0, 1_000.0, 20_000.0, nonmonotonic)
     assert unsupported.status is RaySolveStatus.UNSUPPORTED_BRANCH

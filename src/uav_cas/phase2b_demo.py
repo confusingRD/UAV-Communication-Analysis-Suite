@@ -15,13 +15,13 @@ import matplotlib
 matplotlib.use("Agg")
 from matplotlib import pyplot as plt
 
-from cubesat_link import RaySolverSettings, RaySolveStatus
-
 from uav_cas.atmosphere.profiles import RefractivityProfile
 from uav_cas.propagation import (
     EffectiveEarthRadiusReference,
     GeometricLosReference,
     PropagationRequest,
+    RaySolverSettings,
+    RaySolveStatus,
     derive_effective_earth_k,
     trace_uav_path,
 )
@@ -223,7 +223,7 @@ def _benchmark_matrix(dry_profile: RefractivityProfile) -> list[dict[str, object
         ("dry_ground_grazing_135p85km", 10.0, 1_000.0, 135_850.0, dry_profile),
         ("dry_blocked_140km", 10.0, 1_000.0, 140_000.0, dry_profile),
     )
-    # These are the request-derived controls used by the Phase 2A UAV adapter;
+    # These are the request-derived controls used by the Phase 2A UAV solver;
     # retaining them here independently regenerates the previously reported
     # 130 km demonstration under the same numerical contract.
     settings = RaySolverSettings(

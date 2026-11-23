@@ -10,7 +10,7 @@ import matplotlib
 matplotlib.use("Agg")
 from matplotlib import pyplot as plt
 
-from cubesat_link import SphericalRayResult
+from uav_cas.propagation import SphericalRayResult
 
 
 def save_ray_path_figure(

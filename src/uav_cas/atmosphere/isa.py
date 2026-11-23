@@ -41,6 +41,8 @@ class AtmosphereState:
     density_kg_m3: float
     dynamic_viscosity_pa_s: float
     speed_of_sound_m_s: float
+    water_vapour_density_g_m3: float = 0.0
+    vapour_pressure_pa: float = 0.0
     model: str = "U.S. Standard Atmosphere 1976 lower atmosphere"
     model_version: str = "UAV-CAS ISA-1976-v1"
     humidity_basis: str = "dry air"

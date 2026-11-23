@@ -10,10 +10,13 @@ import json
 from math import atan2, cos, hypot, sin
 from pathlib import Path
 
-from cubesat_link import NeutralProfile, RaySolveStatus, trace_spherical_between
-
 from .atmosphere.profiles import RefractivityProfile
-from .propagation import PropagationRequest, trace_uav_path
+from .propagation import (
+    PropagationRequest,
+    RaySolveStatus,
+    trace_spherical_between,
+    trace_uav_path,
+)
 from .visualization.ray_path import save_ray_path_figure
 
 
@@ -62,12 +65,12 @@ def _constant_index_cases() -> list[dict[str, object]]:
         (1.0, 10.0, 1_000.0, 50_000.0),
         (1.0003, 1_000.0, 1_000.0, 50_000.0),
     ):
-        profile = NeutralProfile(
+        profile = RefractivityProfile.from_samples(
             (0.0, PROFILE_TOP_M),
             (index, index),
-            f"constant index verification n={index}",
-            (1.0e8, 12.0e9),
-            outside="unavailable",
+            source=f"constant index verification n={index}",
+            model_version="UAV-CAS constant-index verification v1",
+            humidity_basis="specified constant refractive index",
         )
         angle = distance / EARTH_RADIUS_M
         source = (EARTH_RADIUS_M + source_height, 0.0, 0.0)

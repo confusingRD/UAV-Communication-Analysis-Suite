@@ -1,8 +1,7 @@
 """Bounded nonducting spherical boundary-value rays between two endpoints.
 
-This additive solver extends, but does not change, ``neutral.trace_spherical``.
-It reuses the verified Bouguer-invariant formulation, profile-knot splitting,
-square-root regularisation, and bounded bisection strategy from that routine.
+The solver uses the verified Bouguer-invariant formulation, profile-knot
+splitting, square-root regularisation, and bounded bisection strategy.
 The supported family is deliberately narrow: short-arc rays in a spherically
 stratified, piecewise-linear profile for which q(r)=n(r)r is strictly
 increasing, with either monotonic radius or one radial minimum.  Atmospheric
@@ -14,7 +13,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from math import acos, asin, cos, degrees, isfinite, sin, sqrt
 
-from .neutral import NeutralProfile
+from uav_cas.atmosphere.profiles import RefractivityProfile
+
+from .contracts import PropagationRequest
 from .ray_types import (
     RayBranch,
     RayDiagnostics,
@@ -23,10 +24,11 @@ from .ray_types import (
     RaySolveStatus,
     SphericalRayResult,
 )
-from .types import C
 
 
 Vector = tuple[float, float, float]
+SPEED_OF_LIGHT_M_S = 299_792_458.0
+REFRACTIVITY_FREQUENCY_RANGE_HZ = (1.0, 1.0e15)
 _SUPPORTED_FAMILY = (
     "short-arc, spherical, horizontally stratified, strictly increasing q=n*r; "
     "radial-monotonic or one lower radial minimum; no ducts/multipath"
@@ -142,16 +144,31 @@ def _adaptive_simpson_vector(
     )
 
 
-def _profile_at(profile: NeutralProfile, radius_m: float, earth_radius_m: float):
-    return profile.at(radius_m - earth_radius_m)
+def _profile_at(
+    profile: RefractivityProfile,
+    radius_m: float,
+    earth_radius_m: float,
+) -> tuple[float, float, float]:
+    """Return n, dn/dh, and zero attenuation for the native bounded profile."""
+
+    height_m = radius_m - earth_radius_m
+    # Preserve the established 0.1 micrometre lower-bound round-off allowance
+    # used by the verified solver at a ground-grazing tangent point.
+    if profile.minimum_height_m - 1.0e-7 <= height_m < profile.minimum_height_m:
+        height_m = profile.minimum_height_m
+    evaluation = profile.evaluate(height_m)
+    slope = profile.gradient_at(height_m)
+    if evaluation.refractive_index is None or slope is None:
+        raise ValueError("profile_data_unavailable")
+    return evaluation.refractive_index, slope, 0.0
 
 
-def _q(profile: NeutralProfile, radius_m: float, earth_radius_m: float) -> float:
+def _q(profile: RefractivityProfile, radius_m: float, earth_radius_m: float) -> float:
     return _profile_at(profile, radius_m, earth_radius_m)[0] * radius_m
 
 
 def _split_radii(
-    profile: NeutralProfile,
+    profile: RefractivityProfile,
     earth_radius_m: float,
     lower_m: float,
     upper_m: float,
@@ -161,7 +178,7 @@ def _split_radii(
             [lower_m, upper_m]
             + [
                 earth_radius_m + height
-                for height in profile.height_m
+                for height in profile.geometric_heights_m
                 if lower_m < earth_radius_m + height < upper_m
             ]
         )
@@ -169,7 +186,7 @@ def _split_radii(
 
 
 def _integrate_range(
-    profile: NeutralProfile,
+    profile: RefractivityProfile,
     earth_radius_m: float,
     base_radius_m: float,
     lower_radius_m: float,
@@ -242,7 +259,7 @@ def _integrate_range(
 
 
 def _q_derivative_minimum(
-    profile: NeutralProfile,
+    profile: RefractivityProfile,
     earth_radius_m: float,
     lower_radius_m: float,
     upper_radius_m: float,
@@ -325,7 +342,9 @@ def _failure(
         geometric_length_m=None,
         refractivity_excess_m=None,
         optical_path_length_m=None,
-        vacuum_travel_time_s=None if endpoint_chord_m is None else endpoint_chord_m / C,
+        vacuum_travel_time_s=(
+            None if endpoint_chord_m is None else endpoint_chord_m / SPEED_OF_LIGHT_M_S
+        ),
         travel_time_s=None,
         excess_delay_s=None,
         ground_clear=None,
@@ -336,7 +355,7 @@ def _failure(
 
 
 def _leg_samples(
-    profile: NeutralProfile,
+    profile: RefractivityProfile,
     earth_radius_m: float,
     base_radius_m: float,
     end_radius_m: float,
@@ -406,7 +425,7 @@ def _tangent(
 def _invariant_sampling_error(
     positions: list[Vector],
     invariant_b_m: float,
-    profile: NeutralProfile,
+    profile: RefractivityProfile,
     earth_radius_m: float,
 ) -> float:
     if invariant_b_m == 0.0 or len(positions) < 3:
@@ -436,7 +455,7 @@ def _build_path(
     minimum_radius: float,
     invariant_b_m: float,
     branch: RayBranch,
-    profile: NeutralProfile,
+    profile: RefractivityProfile,
     earth_radius_m: float,
     settings: RaySolverSettings,
     stats: _QuadratureStats,
@@ -559,7 +578,7 @@ def trace_spherical_between(
     source_position_m: Vector,
     receiver_position_m: Vector,
     frequency_hz: float,
-    profile: NeutralProfile,
+    profile: RefractivityProfile,
     earth_radius_m: float,
     surface_radius_m: float,
     settings: RaySolverSettings = RaySolverSettings(),
@@ -644,7 +663,7 @@ def trace_spherical_between(
             central_angle_rad=central_angle,
             endpoint_chord_m=chord,
         )
-    if profile.outside != "unavailable":
+    if profile.boundary_policy != "unavailable":
         return _failure(
             RaySolveStatus.UNSUPPORTED_MODEL,
             "unbounded_profile_policy",
@@ -658,7 +677,7 @@ def trace_spherical_between(
             central_angle_rad=central_angle,
             endpoint_chord_m=chord,
         )
-    if not profile.frequency_range_hz[0] <= frequency_hz <= profile.frequency_range_hz[1]:
+    if not REFRACTIVITY_FREQUENCY_RANGE_HZ[0] <= frequency_hz <= REFRACTIVITY_FREQUENCY_RANGE_HZ[1]:
         return _failure(
             RaySolveStatus.MISSING_DATA,
             "frequency_outside_profile",
@@ -672,8 +691,8 @@ def trace_spherical_between(
             central_angle_rad=central_angle,
             endpoint_chord_m=chord,
         )
-    profile_lower = earth_radius_m + profile.height_m[0]
-    profile_upper = earth_radius_m + profile.height_m[-1]
+    profile_lower = earth_radius_m + profile.minimum_height_m
+    profile_upper = earth_radius_m + profile.maximum_height_m
     low_endpoint, high_endpoint = sorted((source_radius, receiver_radius))
     if low_endpoint < profile_lower - 1.0e-7 or high_endpoint > profile_upper + 1.0e-7:
         return _failure(
@@ -974,9 +993,9 @@ def trace_spherical_between(
             geometric_length_m=geometric_length,
             refractivity_excess_m=refractivity_excess,
             optical_path_length_m=optical_length,
-            vacuum_travel_time_s=chord / C,
-            travel_time_s=optical_length / C,
-            excess_delay_s=(optical_length - chord) / C,
+            vacuum_travel_time_s=chord / SPEED_OF_LIGHT_M_S,
+            travel_time_s=optical_length / SPEED_OF_LIGHT_M_S,
+            excess_delay_s=(optical_length - chord) / SPEED_OF_LIGHT_M_S,
             ground_clear=ground_clear,
             path=path,
             diagnostics=diagnostics,
@@ -1002,4 +1021,44 @@ def trace_spherical_between(
             central_angle_rad=central_angle,
             endpoint_chord_m=chord,
         )
+
+
+def trace_uav_path(
+    request: PropagationRequest,
+    profile: RefractivityProfile,
+    *,
+    solver_settings: RaySolverSettings | None = None,
+) -> SphericalRayResult:
+    """Trace a short-arc ray between UAV-CAS endpoints over the MSL sphere.
+
+    The request's Earth radius is the smooth MSL surface radius. Endpoint MSL
+    heights are added to that radius. EER options are intentionally absent.
+    """
+
+    central_angle = request.surface_distance_m / request.earth_radius_m
+    source_radius = request.earth_radius_m + request.source_height_msl_m
+    receiver_radius = request.earth_radius_m + request.receiver_height_msl_m
+    source = (source_radius, 0.0, 0.0)
+    receiver = (
+        receiver_radius * cos(central_angle),
+        receiver_radius * sin(central_angle),
+        0.0,
+    )
+    settings = solver_settings or RaySolverSettings(
+        angular_tolerance_rad=max(
+            1.0e-12,
+            request.settings.absolute_tolerance_m / request.earth_radius_m,
+        ),
+        endpoint_tolerance_m=request.settings.absolute_tolerance_m,
+        maximum_iterations=request.settings.maximum_iterations,
+    )
+    return trace_spherical_between(
+        source,
+        receiver,
+        request.frequency_hz,
+        profile,
+        request.earth_radius_m,
+        request.earth_radius_m,
+        settings,
+    )
 

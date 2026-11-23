@@ -1,9 +1,17 @@
-"""Independent analytical references and the Phase 2A ray adapter."""
+"""Analytical references and the native UAV-CAS spherical ray solver."""
 
 from .contracts import PropagationMethod, PropagationRequest, PropagationResult
 from .eer_reference import EffectiveEarthRadiusReference, derive_effective_earth_k
 from .geometric_reference import GeometricLosReference
-from .ray_tracing import to_neutral_profile, trace_uav_path
+from .ray_solver import trace_spherical_between, trace_uav_path
+from .ray_types import (
+    RayBranch,
+    RayDiagnostics,
+    RayPath,
+    RaySolverSettings,
+    RaySolveStatus,
+    SphericalRayResult,
+)
 
 __all__ = [
     "EffectiveEarthRadiusReference",
@@ -11,8 +19,14 @@ __all__ = [
     "PropagationMethod",
     "PropagationRequest",
     "PropagationResult",
+    "RayBranch",
+    "RayDiagnostics",
+    "RayPath",
+    "RaySolverSettings",
+    "RaySolveStatus",
+    "SphericalRayResult",
     "derive_effective_earth_k",
-    "to_neutral_profile",
+    "trace_spherical_between",
     "trace_uav_path",
 ]
 

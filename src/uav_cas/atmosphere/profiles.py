@@ -12,6 +12,7 @@ from typing import Iterable, Sequence
 from uav_cas.validation import finite_number, positive
 
 from .isa import AltitudeKind, AtmosphereState, standard_atmosphere
+from .itu_p835 import low_latitude_reference_atmosphere
 from .refractivity import radio_refractivity
 
 
@@ -94,6 +95,53 @@ class RefractivityProfile:
             source="Dry ISA-1976 thermodynamic states with ITU-R P.453-14 refractivity",
             model_version="UAV-CAS dry-ISA/P.453 profile v1",
             humidity_basis="dry-air reference; e=0 is an assumption, not a measurement",
+            thermodynamic_states=states,
+        )
+
+    @classmethod
+    def from_itu_p835_low_latitude(
+        cls,
+        minimum_geometric_m: float,
+        maximum_geometric_m: float,
+        spacing_m: float,
+    ) -> "RefractivityProfile":
+        """Build a bounded P.835-7/P.453-14 low-latitude profile."""
+
+        lower = finite_number(minimum_geometric_m, "minimum_geometric_m")
+        upper = finite_number(maximum_geometric_m, "maximum_geometric_m")
+        spacing = positive(spacing_m, "spacing_m")
+        if lower < 0.0 or upper <= lower or upper > 20_000.0:
+            raise ValueError("profile bounds must satisfy 0 <= minimum < maximum <= 20000 m")
+        heights: list[float] = []
+        current = lower
+        while current < upper:
+            heights.append(current)
+            current += spacing
+        heights.append(upper)
+        states = tuple(low_latitude_reference_atmosphere(height) for height in heights)
+        refractivity = tuple(
+            radio_refractivity(
+                state.temperature_k,
+                state.pressure_pa,
+                vapour_pressure_hpa=state.vapour_pressure_pa / 100.0,
+                humidity_basis=state.humidity_basis,
+            )
+            for state in states
+        )
+        return cls(
+            geometric_heights_m=tuple(heights),
+            refractive_indices=tuple(item.refractive_index for item in refractivity),
+            radio_refractivities_n_units=tuple(
+                item.radio_refractivity_n_units for item in refractivity
+            ),
+            source=(
+                "ITU-R P.835-7 annual low-latitude reference atmosphere with "
+                "ITU-R P.453-14 radio refractivity"
+            ),
+            model_version="UAV-CAS P.835-7-low-latitude/P.453-14 profile v1",
+            humidity_basis=(
+                "P.835-7 reference water-vapour-density profile; climatology, not measured weather"
+            ),
             thermodynamic_states=states,
         )
 
