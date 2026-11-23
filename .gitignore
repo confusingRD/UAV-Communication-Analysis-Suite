@@ -62,7 +62,22 @@ secrets*.json
 # Private local engineering history and generated reporting artifacts
 docs/
 CommZipFile/
-/outputs/reporting/
+outputs/
+tests/
+scripts/
+plan.md
+AGENTS.md
+
+# Superseded root-level prototype application
+/app.py
+/main.py
+/config.py
+/service.py
+/plots.py
+/raytrace.py
+/requirements.txt
+/run_gui.bat
+/run_gui.sh
 
 # Unrelated local backup archives and extracted backup folders
 *.zip
