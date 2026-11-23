@@ -60,10 +60,11 @@ secrets*.json
 /simulations/intermediate/
 
 # Private local engineering history and generated reporting artifacts
-/docs/
+docs/
+CommZipFile/
 /outputs/reporting/
 
 # Unrelated local backup archives and extracted backup folders
-/*.zip
+*.zip
 /zip/
 
