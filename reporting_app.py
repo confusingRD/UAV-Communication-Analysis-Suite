@@ -19,6 +19,7 @@ from uav_cas.reporting import (
     analyze_reporting_case,
     dashboard_state,
     estimate_maximum_connection,
+    maximum_distance_label,
 )
 from uav_cas.visualization.reporting import (
     atmosphere_profile_figure,
@@ -288,12 +289,7 @@ else:
         unsafe_allow_html=True,
     )
 
-    if maximum.maximum_surface_distance_km is None:
-        maximum_value = "Not resolved"
-    elif maximum.limiting_condition in {"sweep limit reached", "unresolved ray status"}:
-        maximum_value = f"≥ {maximum.maximum_surface_distance_km:.2f} km"
-    else:
-        maximum_value = f"{maximum.maximum_surface_distance_km:.2f} km"
+    maximum_value = maximum_distance_label(maximum)
     metric_columns = st.columns(4, gap="medium")
     metric_columns[0].metric("Estimated max distance", maximum_value)
     metric_columns[1].metric(

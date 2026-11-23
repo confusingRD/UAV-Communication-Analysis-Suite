@@ -110,7 +110,13 @@ def ray_cross_section_figure(result: ReportingResult):
         f"branch={result.ray_outputs.ray_branch or 'unavailable'}"
     )
     axis.grid(True, color="0.88", linewidth=0.7)
-    axis.legend(loc="best", fontsize=8)
+    axis.legend(
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.15),
+        fontsize=8,
+        ncols=2,
+        framealpha=0.95,
+    )
     clearance = result.ray_outputs.minimum_clearance_m
     if clearance is not None:
         axis.text(
@@ -139,7 +145,7 @@ def ray_cross_section_figure(result: ReportingResult):
         ha="center",
         fontsize=8,
     )
-    figure.tight_layout(rect=(0.0, 0.045, 1.0, 1.0))
+    figure.tight_layout(rect=(0.0, 0.08, 1.0, 1.0))
     return figure
 
 
@@ -218,11 +224,12 @@ def communication_performance_figure(
         label="Requested distance",
     )
     if maximum.maximum_surface_distance_km is not None:
-        boundary_label = (
-            "Farthest demonstrated (sweep limit)"
-            if maximum.limiting_condition == "sweep limit reached"
-            else "Estimated feasible boundary"
-        )
+        if maximum.limiting_condition == "sweep limit reached":
+            boundary_label = "Farthest demonstrated (sweep limit)"
+        elif maximum.limiting_condition == "unresolved ray status":
+            boundary_label = "Farthest demonstrated (boundary unresolved)"
+        else:
+            boundary_label = "Estimated feasible boundary"
         axis.axvline(
             maximum.maximum_surface_distance_km,
             color="#0068b5",
@@ -247,7 +254,13 @@ def communication_performance_figure(
     axis.set_ylabel("Link margin after required fade margin (dB)")
     axis.set_title("Communication performance versus distance")
     axis.grid(True, color="0.88", linewidth=0.7)
-    axis.legend(loc="best", fontsize=8, ncols=2)
+    axis.legend(
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.15),
+        fontsize=8,
+        ncols=3,
+        framealpha=0.95,
+    )
     figure.text(
         0.5,
         0.012,
@@ -255,7 +268,7 @@ def communication_performance_figure(
         ha="center",
         fontsize=8,
     )
-    figure.tight_layout(rect=(0.0, 0.045, 1.0, 1.0))
+    figure.tight_layout(rect=(0.0, 0.08, 1.0, 1.0))
     return figure
 
 
@@ -302,7 +315,12 @@ def maximum_connection_region_figure(
         ("insufficient link margin", "#d97706", "o", "Power-limited boundary"),
         ("blocked ray", "#0068b5", "s", "Ray-limited boundary"),
         ("sweep limit reached", "#6b7280", "^", "Sweep-limited; boundary unresolved"),
-        ("unresolved ray status", "#6b21a8", "x", "Unresolved ray status"),
+        (
+            "unresolved ray status",
+            "#6b21a8",
+            "x",
+            "Farthest demonstrated; boundary unresolved",
+        ),
     )
     for condition, colour, marker, label in categories:
         selected = [
@@ -321,10 +339,27 @@ def maximum_connection_region_figure(
                 zorder=4,
                 label=label,
             )
+    no_feasible_link = [
+        altitude / 1_000.0
+        for altitude, result in altitude_results
+        if result.maximum_surface_distance_km is None
+        and result.limiting_condition in resolved_conditions
+    ]
+    if no_feasible_link:
+        axis.scatter(
+            [0.0] * len(no_feasible_link),
+            no_feasible_link,
+            color="#b42318",
+            marker="D",
+            s=48,
+            zorder=4,
+            label="No feasible link",
+        )
     unresolved_without_range = [
         altitude / 1_000.0
         for altitude, result in altitude_results
         if result.maximum_surface_distance_km is None
+        and result.limiting_condition not in resolved_conditions
     ]
     if unresolved_without_range:
         axis.scatter(
@@ -333,13 +368,20 @@ def maximum_connection_region_figure(
             color="#6b21a8",
             marker="x",
             s=55,
-            label="No feasible resolved range",
+            zorder=4,
+            label="Unresolved ray status",
         )
     axis.set_xlabel("Estimated maximum feasible surface distance (km)")
     axis.set_ylabel("UAV altitude above MSL (km)")
     axis.set_title("Maximum connection region: direct ray + conditional link margin")
     axis.grid(True, color="0.85", linewidth=0.7)
-    axis.legend(loc="lower right", fontsize=8)
+    axis.legend(
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.15),
+        fontsize=8,
+        ncols=2,
+        framealpha=0.95,
+    )
     figure.text(
         0.5,
         0.012,
@@ -347,7 +389,7 @@ def maximum_connection_region_figure(
         ha="center",
         fontsize=8,
     )
-    figure.tight_layout(rect=(0.0, 0.045, 1.0, 1.0))
+    figure.tight_layout(rect=(0.0, 0.08, 1.0, 1.0))
     return figure
 
 

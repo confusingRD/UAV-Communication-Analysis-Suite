@@ -442,6 +442,18 @@ def estimate_maximum_connection(inputs: ReportingInputs) -> MaximumConnectionRes
     return MaximumConnectionResult(lower, condition, reason, upper - lower, tuple(points))
 
 
+def maximum_distance_label(maximum: MaximumConnectionResult) -> str:
+    """Format the estimated maximum connection distance without conflating outcomes."""
+
+    if maximum.maximum_surface_distance_km is None:
+        if maximum.limiting_condition == "unresolved ray status":
+            return "Unresolved"
+        return "No feasible link"
+    if maximum.limiting_condition in {"sweep limit reached", "unresolved ray status"}:
+        return f"≥ {maximum.maximum_surface_distance_km:.2f} km"
+    return f"{maximum.maximum_surface_distance_km:.2f} km"
+
+
 def altitude_coverage_curve(
     inputs: ReportingInputs, altitudes_m: list[float]
 ) -> tuple[tuple[float, MaximumConnectionResult], ...]:

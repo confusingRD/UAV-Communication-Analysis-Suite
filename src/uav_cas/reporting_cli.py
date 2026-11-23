@@ -10,6 +10,8 @@ from pathlib import Path
 
 from .reporting import (
     AtmosphereModel,
+    REFERENCE_LATITUDE_DEG,
+    REFERENCE_LONGITUDE_DEG,
     ReportingInputs,
     altitude_coverage_curve,
     analyze_reporting_case,
@@ -110,10 +112,11 @@ def generate_reporting_outputs(inputs: ReportingInputs, output_dir: Path) -> dic
     }
     summary = {
         "application": "UAV Communication Analysis Suite",
-        "reference_location": {
-            "name": "Ho Chi Minh City",
-            "latitude_deg_n": 10.82,
-            "longitude_deg_e": 106.63,
+        "reference_scenario": {
+            "description": "Low-latitude reference-atmosphere example",
+            "latitude_deg_n": REFERENCE_LATITUDE_DEG,
+            "longitude_deg_e": REFERENCE_LONGITUDE_DEG,
+            "warning": "Coordinates are metadata; no location-specific weather is generated.",
         },
         "inputs": asdict(inputs),
         "atmospheric_outputs_at_uav": asdict(result.atmosphere),
